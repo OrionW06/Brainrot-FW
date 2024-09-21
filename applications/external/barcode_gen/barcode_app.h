@@ -16,8 +16,9 @@
 
 #include "barcode_utils.h"
 
-#define TAG          "BARCODE"
-#define VERSION      FAP_VERSION
+#define TAG "BARCODE"
+
+#define VERSION      "1.1"
 #define FILE_VERSION "1"
 
 #define TEXT_BUFFER_SIZE 128

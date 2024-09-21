@@ -12,7 +12,6 @@ typedef struct {
 
 typedef enum {
     ImuMouseKeyRight,
-    ImuMouseKeyWheel,
     ImuMouseKeyLeft,
 } ImuMouseKey;
 

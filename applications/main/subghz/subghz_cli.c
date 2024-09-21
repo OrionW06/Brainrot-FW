@@ -530,7 +530,7 @@ void subghz_cli_command_decode_raw(Cli* cli, FuriString* args, void* context) {
         }
 
         printf(
-            "Listening at %s.\r\n\r\nPress CTRL+C to stop\r\n\r\n",
+            "Listening at \033[0;33m%s\033[0m.\r\n\r\nPress CTRL+C to stop\r\n\r\n",
             furi_string_get_cstr(file_name));
 
         LevelDuration level_duration;
@@ -989,7 +989,7 @@ static void subghz_cli_command_chat(Cli* cli, FuriString* args) {
 
     NotificationApp* notification = furi_record_open(RECORD_NOTIFICATION);
 
-    furi_string_printf(name, "%s: ", furi_hal_version_get_name_ptr());
+    furi_string_printf(name, "\033[0;33m%s\033[0m: ", furi_hal_version_get_name_ptr());
     furi_string_set(input, name);
     printf("%s", furi_string_get_cstr(input));
     fflush(stdout);
@@ -1058,7 +1058,7 @@ static void subghz_cli_command_chat(Cli* cli, FuriString* args) {
                             for(uint8_t i = 0; i < 80; i++) {
                                 printf(" ");
                             }
-                            printf("                    - %s", furi_string_get_cstr(output));
+                            printf("\r %s", furi_string_get_cstr(output));
                             printf("%s", furi_string_get_cstr(input));
                             fflush(stdout);
                             furi_string_reset(output);
@@ -1070,14 +1070,18 @@ static void subghz_cli_command_chat(Cli* cli, FuriString* args) {
                 notification_message(notification, &sequence_single_vibro);
                 break;
             case SubGhzChatEventUserEntrance:
-                furi_string_printf(sysmsg, "%s joined chat.\r\n", furi_hal_version_get_name_ptr());
+                furi_string_printf(
+                    sysmsg,
+                    "\033[0;34m%s joined chat.\033[0m\r\n",
+                    furi_hal_version_get_name_ptr());
                 subghz_chat_worker_write(
                     subghz_chat,
                     (uint8_t*)furi_string_get_cstr(sysmsg),
                     strlen(furi_string_get_cstr(sysmsg)));
                 break;
             case SubGhzChatEventUserExit:
-                furi_string_printf(sysmsg, "%s left chat.\r\n", furi_hal_version_get_name_ptr());
+                furi_string_printf(
+                    sysmsg, "\033[0;31m%s left chat.\033[0m\r\n", furi_hal_version_get_name_ptr());
                 subghz_chat_worker_write(
                     subghz_chat,
                     (uint8_t*)furi_string_get_cstr(sysmsg),

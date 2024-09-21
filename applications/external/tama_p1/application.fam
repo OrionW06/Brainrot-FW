@@ -1,12 +1,13 @@
 App(
     appid="tama_p1",
-    name="TAMA P1",
+    name="Tamagotchi",
     apptype=FlipperAppType.EXTERNAL,
     entry_point="tama_p1_app",
+    cdefines=["APP_TAMA_P1"],
+    requires=["gui", "storage"],
     stack_size=2 * 1024,
-    fap_file_assets="resources",
-    fap_icon="tamaIcon.png",
+    order=215,
+    fap_file_assets="files",
+    fap_icon="tamaIcon4.png",
     fap_category="Games",
-    #  [Original TAMA P1 (By GMMan)](https://github.com/GMMan/flipperzero-firmware/tree/tama-p1)
-    #  [Mute & Settings (By Round-Pi)](https://github.com/Round-Pi/flipperzero-tamagotch-p1)
 )

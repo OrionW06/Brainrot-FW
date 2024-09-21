@@ -4,10 +4,6 @@
 
 #include "../helpers/pin_code.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef void (*DesktopViewPinInputCallback)(void*);
 typedef void (*DesktopViewPinInputDoneCallback)(const DesktopPinCode* pin_code, void*);
 typedef struct DesktopViewPinInput DesktopViewPinInput;
@@ -48,7 +44,3 @@ void desktop_view_pin_input_set_timeout_callback(
 void desktop_view_pin_input_set_context(DesktopViewPinInput* pin_input, void* context);
 void desktop_view_pin_input_lock_input(DesktopViewPinInput* pin_input);
 void desktop_view_pin_input_unlock_input(DesktopViewPinInput* pin_input);
-
-#ifdef __cplusplus
-}
-#endif

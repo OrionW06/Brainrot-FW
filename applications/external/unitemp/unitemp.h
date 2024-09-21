@@ -42,7 +42,7 @@
 //Версия приложения
 #define UNITEMP_APP_VER       "1.4-store"
 //Путь хранения файлов плагина
-#define APP_PATH_FOLDER       "/ext/apps_data/unitemp"
+#define APP_PATH_FOLDER       EXT_PATH("apps_data/unitemp")
 //Имя файла с настройками
 #define APP_FILENAME_SETTINGS "settings.cfg"
 //Имя файла с датчиками
@@ -75,12 +75,6 @@ typedef enum {
 
     UT_PRESSURE_COUNT
 } pressureMeasureUnit;
-// Humidity units
-typedef enum {
-    UT_HUMIDITY_RELATIVE, // Relative humidity
-    UT_HUMIDITY_DEWPOINT, // Dewpoint
-    UT_HUMIDITY_COUNT // Number of humidity modes
-} humidityUnit;
 /* Объявление структур */
 //Настройки плагина
 typedef struct {
@@ -88,8 +82,6 @@ typedef struct {
     bool infinityBacklight;
     //Единица измерения температуры
     tempMeasureUnit temp_unit;
-    // Humidity units
-    humidityUnit humidity_unit;
     //Единица измерения давления
     pressureMeasureUnit pressure_unit;
     // Do calculate and show heat index
@@ -138,21 +130,7 @@ void unitemp_calculate_heat_index(Sensor* sensor);
  * 
  * @param sensor Указатель на датчик
  */
-void unitemp_celsiusToFahrenheit(Sensor* sensor);
-
-/**
- * @brief Calculate dewpoint in C from relative humidity
- * 
- * @param sensor Pointer to sensor
- */
-void unitemp_rhToDewpointC(Sensor* sensor);
-
-/**
- * @brief Calculate dewpoint in F from relative humidity
- * 
- * @param sensor Pointer to sensor
- */
-void unitemp_rhToDewpointF(Sensor* sensor);
+void uintemp_celsiumToFarengate(Sensor* sensor);
 
 /**
  * @brief Конвертация давления из паскалей в мм рт.ст.
@@ -168,9 +146,9 @@ void unitemp_pascalToMmHg(Sensor* sensor);
  */
 void unitemp_pascalToKPa(Sensor* sensor);
 /**
- * @brief Convert pressure from Pa to hPa
+ * @brief Конвертация давления из паскалей в дюйм рт.ст.
  * 
- * @param sensor Pointer to sensor
+ * @param sensor Указатель на датчик
  */
 void unitemp_pascalToHPa(Sensor* sensor);
 /**

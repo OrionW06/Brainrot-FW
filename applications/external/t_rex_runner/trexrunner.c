@@ -7,9 +7,8 @@
 #include <input/input.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <dolphin/dolphin.h>
 
-#include "trex_runner_icons.h"
+#include "t_rex_runner_icons.h"
 
 #define DINO_START_X 10
 #define DINO_START_Y 34 // 64 - 22 - BACKGROUND_H / 2 - 2
@@ -181,9 +180,6 @@ static void render_callback(Canvas* const canvas, void* ctx) {
         snprintf(score_string, 12, "Score: %d", game_state->score);
         canvas_draw_str_aligned(canvas, 85, 5, AlignLeft, AlignTop, score_string);
 
-        if(game_state->score % 10 == 0) {
-            dolphin_deed(getRandomDeed());
-        }
     } else {
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 64, 32, AlignCenter, AlignBottom, "You lost :c");
@@ -239,7 +235,7 @@ int32_t trexrunner_app() {
     furi_timer_start(game_state->timer, (uint32_t)furi_kernel_get_tick_frequency() / FPS);
 
     // Open GUI and register view_port
-    Gui* gui = furi_record_open(RECORD_GUI);
+    Gui* gui = furi_record_open("gui");
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     PluginEvent event;
@@ -276,13 +272,14 @@ int32_t trexrunner_app() {
                 }
             }
         }
+
         furi_mutex_release(game_state->mutex);
         view_port_update(view_port);
     }
 
     view_port_enabled_set(view_port, false);
     gui_remove_view_port(gui, view_port);
-    furi_record_close(RECORD_GUI);
+    furi_record_close("gui");
     view_port_free(view_port);
     furi_message_queue_free(event_queue);
     furi_mutex_free(game_state->mutex);

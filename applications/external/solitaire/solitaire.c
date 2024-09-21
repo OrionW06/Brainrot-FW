@@ -8,6 +8,7 @@
 #include <notification/notification.h>
 #include <notification/notification_messages.h>
 void init(GameState* game_state);
+
 const NotificationSequence sequence_fail = {
     &message_vibro_on,
     &message_note_c4,
@@ -284,6 +285,7 @@ void tick(GameState* game_state, NotificationApp* notification) {
             game_state->state = GameStateAnimate;
             game_state->had_change = true;
             dolphin_deed(DolphinDeedPluginGameWin);
+
             return;
         }
     }
@@ -414,6 +416,7 @@ void tick(GameState* game_state, NotificationApp* notification) {
 }
 
 void init(GameState* game_state) {
+    dolphin_deed(DolphinDeedPluginGameStart);
     game_state->selectColumn = 0;
     game_state->selected_card = 0;
     game_state->selectRow = 0;
@@ -454,15 +457,15 @@ void init_start(GameState* game_state) {
 }
 
 static void input_callback(InputEvent* input_event, void* ctx) {
-    furi_assert(ctx);
     FuriMessageQueue* event_queue = ctx;
+    furi_assert(event_queue);
     AppEvent event = {.type = EventTypeKey, .input = *input_event};
     furi_message_queue_put(event_queue, &event, FuriWaitForever);
 }
 
 static void update_timer_callback(void* ctx) {
-    furi_assert(ctx);
     FuriMessageQueue* event_queue = ctx;
+    furi_assert(event_queue);
     AppEvent event = {.type = EventTypeTick};
     furi_message_queue_put(event_queue, &event, 0);
 }
@@ -495,7 +498,7 @@ int32_t solitaire_app(void* p) {
     FuriTimer* timer = furi_timer_alloc(update_timer_callback, FuriTimerTypePeriodic, event_queue);
     furi_timer_start(timer, furi_kernel_get_tick_frequency() / 30);
 
-    Gui* gui = furi_record_open(RECORD_GUI);
+    Gui* gui = furi_record_open("gui");
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
 
     AppEvent event;
@@ -552,8 +555,9 @@ int32_t solitaire_app(void* p) {
                 game_state->input = InputKeyMAX;
             }
         }
-        view_port_update(view_port);
+
         furi_mutex_release(game_state->mutex);
+        view_port_update(view_port);
     }
 
     notification_message_block(notification, &sequence_display_backlight_enforce_auto);
@@ -574,5 +578,6 @@ free_and_exit:
     free(game_state->deck.cards);
     free(game_state);
     furi_message_queue_free(event_queue);
+
     return return_code;
 }

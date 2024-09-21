@@ -1,5 +1,4 @@
 #include "malveke_photo.h"
-#include <datetime/datetime.h>
 
 void get_timefilename(FuriString* name, int index) {
     DateTime datetime = {0};

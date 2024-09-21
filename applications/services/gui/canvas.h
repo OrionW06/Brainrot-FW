@@ -21,9 +21,6 @@ typedef enum {
     ColorXOR = 0x02,
 } Color;
 
-/** Provide defines to permit checking if new are fonts available*/
-#define CANVAS_HAS_FONT_BATTERYPERCENT = 1
-
 /** Fonts enumeration */
 typedef enum {
     FontPrimary,

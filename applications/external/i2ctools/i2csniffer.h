@@ -3,8 +3,6 @@
 #include <furi.h>
 #include <furi_hal.h>
 
-#include "i2csaver.h"
-
 // I2C Pins
 #define pinSCL &gpio_ext_pc0
 #define pinSDA &gpio_ext_pc1
@@ -39,8 +37,6 @@ typedef struct {
     uint8_t frame_index;
     uint8_t menu_index;
     uint8_t row_index;
-    bool must_save;
-    bool saved;
 } i2cSniffer;
 
 void clear_sniffer_buffers(i2cSniffer* i2c_sniffer);
@@ -48,7 +44,6 @@ void start_interrupts(i2cSniffer* i2c_sniffer);
 void stop_interrupts();
 void SDAcallback(void* _i2c_sniffer);
 void SCLcallback(void* _i2c_sniffer);
-bool save_sniffer_data(i2cSniffer* i2c_sniffer);
 
 i2cSniffer* i2c_sniffer_alloc();
 void i2c_sniffer_free(i2cSniffer* i2c_sniffer);

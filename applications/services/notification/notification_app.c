@@ -144,17 +144,16 @@ static void notification_apply_notification_leds(NotificationApp* app, const uin
 
 // settings
 uint8_t notification_settings_get_display_brightness(NotificationApp* app, uint8_t value) {
-    return (value * app->settings.display_brightness);
+    return value * app->settings.display_brightness;
 }
 
 static uint8_t notification_settings_get_rgb_led_brightness(NotificationApp* app, uint8_t value) {
-    return (value * app->settings.led_brightness);
+    return value * app->settings.led_brightness;
 }
 
 static uint32_t notification_settings_display_off_delay_ticks(NotificationApp* app) {
-    return (
-        (float)(app->settings.display_off_delay_ms) /
-        (1000.0f / furi_kernel_get_tick_frequency()));
+    return (float)(app->settings.display_off_delay_ms) /
+           (1000.0f / furi_kernel_get_tick_frequency());
 }
 
 // generics
@@ -251,51 +250,41 @@ static void notification_process_notification_message(
             break;
         case NotificationMessageTypeLedRed:
             // store and send on delay or after seq
-            if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagStealthMode)) {
-                led_active = true;
-                led_values[0] = notification_message->data.led.value;
-                app->led[0].value_last[LayerNotification] = led_values[0];
-                reset_mask |= reset_red_mask;
-            }
+            led_active = true;
+            led_values[0] = notification_message->data.led.value;
+            app->led[0].value_last[LayerNotification] = led_values[0];
+            reset_mask |= reset_red_mask;
             break;
         case NotificationMessageTypeLedGreen:
             // store and send on delay or after seq
-            if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagStealthMode)) {
-                led_active = true;
-                led_values[1] = notification_message->data.led.value;
-                app->led[1].value_last[LayerNotification] = led_values[1];
-                reset_mask |= reset_green_mask;
-            }
+            led_active = true;
+            led_values[1] = notification_message->data.led.value;
+            app->led[1].value_last[LayerNotification] = led_values[1];
+            reset_mask |= reset_green_mask;
             break;
         case NotificationMessageTypeLedBlue:
             // store and send on delay or after seq
-            if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagStealthMode)) {
-                led_active = true;
-                led_values[2] = notification_message->data.led.value;
-                app->led[2].value_last[LayerNotification] = led_values[2];
-                reset_mask |= reset_blue_mask;
-            }
+            led_active = true;
+            led_values[2] = notification_message->data.led.value;
+            app->led[2].value_last[LayerNotification] = led_values[2];
+            reset_mask |= reset_blue_mask;
             break;
         case NotificationMessageTypeLedBlinkStart:
             // store and send on delay or after seq
-            if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagStealthMode)) {
-                led_active = true;
-                furi_hal_light_blink_start(
-                    notification_message->data.led_blink.color,
-                    app->settings.led_brightness * 255,
-                    notification_message->data.led_blink.on_time,
-                    notification_message->data.led_blink.period);
-                reset_mask |= reset_blink_mask;
-                reset_mask |= reset_red_mask;
-                reset_mask |= reset_green_mask;
-                reset_mask |= reset_blue_mask;
-            }
+            led_active = true;
+            furi_hal_light_blink_start(
+                notification_message->data.led_blink.color,
+                app->settings.led_brightness * 255,
+                notification_message->data.led_blink.on_time,
+                notification_message->data.led_blink.period);
+            reset_mask |= reset_blink_mask;
+            reset_mask |= reset_red_mask;
+            reset_mask |= reset_green_mask;
+            reset_mask |= reset_blue_mask;
             break;
         case NotificationMessageTypeLedBlinkColor:
-            if(!furi_hal_rtc_is_flag_set(FuriHalRtcFlagStealthMode)) {
-                led_active = true;
-                furi_hal_light_blink_set_color(notification_message->data.led_blink.color);
-            }
+            led_active = true;
+            furi_hal_light_blink_set_color(notification_message->data.led_blink.color);
             break;
         case NotificationMessageTypeLedBlinkStop:
             furi_hal_light_blink_stop();

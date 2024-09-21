@@ -13,9 +13,10 @@
 #include <math.h>
 #include <notification/notification.h>
 #include <notification/notification_messages.h>
-#include "asteroids_icons.h"
+#include <asteroids_icons.h>
 
-#define TAG                    "Asteroids" // Used for logging
+#define TAG "Asteroids" // Used for logging
+
 #define DEBUG_MSG              0
 #define SCREEN_XRES            128
 #define SCREEN_YRES            64
@@ -28,8 +29,7 @@
 #define MAXPOWERUPS            3 /* Max powerups allowed on screen */
 #define POWERUPSTTL            400 /* Max powerup time to live, in ticks. */
 #define SHIP_HIT_ANIMATION_LEN 15
-// Tick runs in thread, cant use APP_DATA_PATH()
-#define SAVING_DIRECTORY       EXT_PATH("apps_data/asteroids")
+#define SAVING_DIRECTORY       STORAGE_APP_DATA_PATH_PREFIX
 #define SAVING_FILENAME        SAVING_DIRECTORY "/game_asteroids.save"
 #ifndef PI
 #define PI 3.14159265358979f
@@ -1149,9 +1149,7 @@ void game_tick(void* ctx) {
 
 bool load_game(AsteroidsApp* app) {
     Storage* storage = furi_record_open(RECORD_STORAGE);
-    storage_common_mkdir(storage, SAVING_DIRECTORY);
-    storage_common_copy(storage, EXT_PATH("apps/Games/game_asteroids.save"), SAVING_FILENAME);
-    storage_common_remove(storage, EXT_PATH("apps/Games/game_asteroids.save"));
+    storage_common_migrate(storage, EXT_PATH("apps/Games/game_asteroids.save"), SAVING_FILENAME);
 
     File* file = storage_file_alloc(storage);
     uint16_t bytes_readed = 0;
@@ -1168,12 +1166,6 @@ bool load_game(AsteroidsApp* app) {
 
 void save_game(AsteroidsApp* app) {
     Storage* storage = furi_record_open(RECORD_STORAGE);
-
-    if(storage_common_stat(storage, SAVING_DIRECTORY, NULL) == FSE_NOT_EXIST) {
-        if(!storage_simply_mkdir(storage, SAVING_DIRECTORY)) {
-            return;
-        }
-    }
 
     File* file = storage_file_alloc(storage);
     if(storage_file_open(file, SAVING_FILENAME, FSAM_WRITE, FSOM_CREATE_ALWAYS)) {

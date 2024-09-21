@@ -148,7 +148,7 @@ bool flipp_pomodoro_scene_timer_on_event(void* ctx, SceneManagerEvent event) {
         return SceneEventConusmed;
     default:
         break;
-    }
+    };
     return SceneEventNotConusmed;
 }
 

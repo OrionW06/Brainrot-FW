@@ -8,6 +8,5 @@ App(
         "js_app_start",
         "findmy_startup",
         # "archive",
-        "findmy_startup",
     ],
 )

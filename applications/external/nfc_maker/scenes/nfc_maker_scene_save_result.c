@@ -20,8 +20,8 @@ void nfc_maker_scene_save_result_on_enter(void* context) {
     furi_string_free(path);
 
     if(success) {
-        popup_set_icon(popup, 32, 5, &I_DolphinNice_96x59);
-        popup_set_header(popup, "Saved!", 11, 20, AlignLeft, AlignBottom);
+        popup_set_icon(popup, 36, 5, &I_DolphinDone_80x58);
+        popup_set_header(popup, "Saved!", 13, 22, AlignLeft, AlignBottom);
         popup_enable_timeout(popup);
     } else {
         popup_set_icon(popup, 69, 15, &I_WarningDolphinFlip_45x42);

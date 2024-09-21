@@ -130,7 +130,6 @@ static bool countdown_timer_view_on_input(InputEvent* event, void* ctx) {
                 handle_misc_cmd(hw, CountDownTimerToggleCounting);
             }
             break;
-
         case InputKeyBack:
             return false;
             break;

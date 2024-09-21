@@ -5,7 +5,6 @@
 #include <furi_hal_serial.h>
 #include <gui/canvas_i.h>
 #include <gui/gui.h>
-#include <cfw/cfw.h>
 #include <input/input.h>
 #include <expansion/expansion.h>
 //#include <math.h>
@@ -13,9 +12,11 @@
 //#include <notification/notification_messages.h>
 //#include <stdlib.h>
 
+#include <momentum/momentum.h>
+
 #include "FlipperZeroWiFiDeauthModuleDefines.h"
 
-#define UART_CH (cfw_settings.uart_esp_channel)
+#define UART_CH (momentum_settings.uart_esp_channel)
 
 #define DEAUTH_APP_DEBUG 0
 

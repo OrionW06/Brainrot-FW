@@ -2,16 +2,16 @@
 // Created by Dusan Klinec on 10/05/2018.
 //
 
-#ifdef USE_MONERO
+#if USE_MONERO
 
 #ifndef TREZOR_CRYPTO_MONERO_H
 #define TREZOR_CRYPTO_MONERO_H
 
-#ifdef !USE_MONERO
+#if !USE_MONERO
 #error "Compile with -DUSE_MONERO=1"
 #endif
 
-#ifndef USE_KECCAK
+#if !USE_KECCAK
 #error "Compile with -DUSE_KECCAK=1"
 #endif
 

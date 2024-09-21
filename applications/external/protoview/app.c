@@ -1,5 +1,6 @@
 /* Copyright (C) 2022-2023 Salvatore Sanfilippo -- All Rights Reserved
  * See the LICENSE file for information about the license. */
+
 #include "app.h"
 
 RawSamplesBuffer *RawSamples, *DetectedSamples;
@@ -127,7 +128,7 @@ ProtoViewApp* protoview_app_alloc() {
 
     //init setting
     app->setting = subghz_setting_alloc();
-    subghz_setting_load(app->setting, EXT_PATH("subghz/assets/setting_user.txt"));
+    subghz_setting_load(app->setting, EXT_PATH("subghz/assets/setting_user"));
 
     // GUI
     app->gui = furi_record_open(RECORD_GUI);
@@ -344,7 +345,7 @@ int32_t protoview_app_entry(void* p) {
             /* Allocate a view dispatcher, add a text input view to it,
              * and activate it. */
             app->view_dispatcher = view_dispatcher_alloc();
-            view_dispatcher_enable_queue(app->view_dispatcher);
+
             /* We need to set a navigation callback for the view dispatcher
              * otherwise when the user presses back on the keyboard to
              * abort, the dispatcher will not stop. */

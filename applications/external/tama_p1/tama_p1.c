@@ -723,8 +723,7 @@ static void tama_p1_init(TamaApp* const ctx) {
 
     // Load ROM
     Storage* storage = furi_record_open(RECORD_STORAGE);
-    storage_common_copy(storage, EXT_PATH("tama_p1"), EXT_PATH("apps_data/tama_p1"));
-    storage_common_remove(storage, EXT_PATH("tama_p1"));
+    storage_common_migrate(storage, EXT_PATH("tama_p1"), STORAGE_APP_DATA_PATH_PREFIX);
     FileInfo fi;
     if(storage_common_stat(storage, TAMA_ROM_PATH, &fi) == FSE_OK) {
         File* rom_file = storage_file_alloc(storage);
@@ -841,8 +840,8 @@ int32_t tama_p1_app(void* p) {
 
                 if(in_menu) {
                     // if(menu_cursor >= 2 &&
-                    // (event.input.key == InputKeyUp || event.input.key == InputKeyDown)) {
-                    // tama_btn_state = BTN_STATE_RELEASED;
+                    //    (event.input.key == InputKeyUp || event.input.key == InputKeyDown)) {
+                    //     tama_btn_state = BTN_STATE_RELEASED;
                     // }
                     if(event.input.key == InputKeyBack) {
                         tama_btn_state = BTN_STATE_RELEASED;

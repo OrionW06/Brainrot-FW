@@ -3,11 +3,7 @@
 #include <storage/storage.h>
 #include "js_app_i.h"
 #include <toolbox/path.h>
-#if __has_include(<js_app_icons.h>)
-#include <js_app_icons.h>
-#else
 #include <assets_icons.h>
-#endif
 #include <cli/cli.h>
 
 #define TAG "JS app"

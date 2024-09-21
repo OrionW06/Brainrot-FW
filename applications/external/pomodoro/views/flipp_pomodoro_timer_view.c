@@ -136,8 +136,7 @@ static void
         hint_width - 4,
         displayed_hint_string,
         scroll_offset,
-        true,
-        false);
+        true);
     furi_string_free(displayed_hint_string);
     model->scroll_counter++;
 }
@@ -145,7 +144,7 @@ static void
 static void flipp_pomodoro_view_timer_draw_callback(Canvas* canvas, void* _model) {
     if(!_model) {
         return;
-    }
+    };
 
     FlippPomodoroTimerViewModel* model = _model;
 

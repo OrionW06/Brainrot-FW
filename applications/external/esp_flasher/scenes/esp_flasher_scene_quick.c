@@ -209,10 +209,10 @@ bool esp_flasher_scene_quick_on_event(void* context, SceneManagerEvent event) {
             enter_bootloader = true;
             /* fallthrough */
         case QuickS2_Marauder:
-            boot = APP_DATA_PATH("assets/marauder/WifidevS2/esp32_marauder.ino.bootloader.bin");
+            boot = APP_DATA_PATH("assets/marauder/s2/esp32_marauder.ino.bootloader.bin");
             part = APP_DATA_PATH("assets/marauder/esp32_marauder.ino.partitions.bin");
             app0 = APP_DATA_PATH("assets/marauder/boot_app0.bin");
-            firm = APP_DATA_PATH("assets/marauder/WifidevS2/marauder_v0_13_10_flipper.bin");
+            firm = APP_DATA_PATH("assets/marauder/s2/esp32_marauder.flipper.bin");
             break;
 
         case QuickS2Boot_Wardriver:
@@ -226,19 +226,19 @@ bool esp_flasher_scene_quick_on_event(void* context, SceneManagerEvent event) {
             enter_bootloader = true;
             /* fallthrough */
         case QuickS2_Blackmagic:
-            boot = APP_DATA_PATH("assets/blackmagic/bootloader.bin");
-            part = APP_DATA_PATH("assets/blackmagic/partition-table.bin");
-            firm = APP_DATA_PATH("assets/blackmagic/blackmagic.bin");
+            boot = APP_DATA_PATH("assets/blackmagic/s2/bootloader.bin");
+            part = APP_DATA_PATH("assets/blackmagic/s2/partition-table.bin");
+            firm = APP_DATA_PATH("assets/blackmagic/s2/blackmagic.bin");
             break;
 
         case QuickWROOMBoot_Marauder:
             enter_bootloader = true;
             /* fallthrough */
         case QuickWROOM_Marauder:
-            boot = APP_DATA_PATH("assets/marauder/DevproWroom/esp32_marauder.ino.bootloader.bin");
+            boot = APP_DATA_PATH("assets/marauder/wroom/esp32_marauder.ino.bootloader.bin");
             part = APP_DATA_PATH("assets/marauder/esp32_marauder.ino.partitions.bin");
             app0 = APP_DATA_PATH("assets/marauder/boot_app0.bin");
-            firm = APP_DATA_PATH("assets/marauder/DevproWroom/marauder_v0_13_10_devboardpro.bin");
+            firm = APP_DATA_PATH("assets/marauder/wroom/esp32_marauder.dev_board_pro.bin");
             break;
 
         case QuickWROOMBoot_Wardriver:
@@ -265,7 +265,7 @@ bool esp_flasher_scene_quick_on_event(void* context, SceneManagerEvent event) {
             boot = APP_DATA_PATH("assets/marauder/s3/esp32_marauder.ino.bootloader.bin");
             part = APP_DATA_PATH("assets/marauder/esp32_marauder.ino.partitions.bin");
             app0 = APP_DATA_PATH("assets/marauder/boot_app0.bin");
-            firm = APP_DATA_PATH("assets/marauder/s3/marauder_v0_13_10_multiboardS3.bin");
+            firm = APP_DATA_PATH("assets/marauder/s3/esp32_marauder.multiboardS3.bin");
             break;
 
         case QuickS3Boot_Wardriver:

@@ -31,7 +31,7 @@
 // Parts of this file are originally copyright (c) 2012-2013 The Cryptonote
 // developers
 
-#ifdef USE_MONERO
+#if USE_MONERO
 
 #pragma once
 

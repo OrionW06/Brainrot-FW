@@ -2,7 +2,6 @@
 // Public Domain Dedication
 // https://github.com/nmrr
 
-#include <datetime/datetime.h>
 #include <stdio.h>
 #include <furi.h>
 #include <gui/gui.h>
@@ -148,7 +147,7 @@ static void draw_callback(Canvas* canvas, void* ctx) {
     } else {
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str_aligned(canvas, 64, 10, AlignCenter, AlignBottom, "Geiger Counter");
-        canvas_draw_str_aligned(canvas, 64, 20, AlignCenter, AlignBottom, "Version 20240624");
+        canvas_draw_str_aligned(canvas, 64, 20, AlignCenter, AlignBottom, "Version 20240311");
         canvas_draw_str_aligned(canvas, 64, 40, AlignCenter, AlignBottom, "github.com/nmrr");
     }
 }
@@ -215,14 +214,9 @@ int32_t flipper_geiger_app() {
     view_port_draw_callback_set(view_port, draw_callback, &mutexVal.mutex);
     view_port_input_callback_set(view_port, input_callback, event_queue);
 
-    // DISABLE & REMOVE INITIAL CALLBACK (FIRMWARE BUG ?)
-    furi_hal_gpio_disable_int_callback(&gpio_ext_pa7);
-    furi_hal_gpio_remove_int_callback(&gpio_ext_pa7);
-
-    // NEW CALLBACK
-    furi_hal_gpio_init(&gpio_ext_pa7, GpioModeInterruptFall, GpioPullUp, GpioSpeedVeryHigh);
     furi_hal_gpio_add_int_callback(&gpio_ext_pa7, gpiocallback, event_queue);
     furi_hal_gpio_enable_int_callback(&gpio_ext_pa7);
+    furi_hal_gpio_init(&gpio_ext_pa7, GpioModeInterruptFall, GpioPullUp, GpioSpeedVeryHigh);
 
     Gui* gui = furi_record_open(RECORD_GUI);
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
@@ -231,6 +225,7 @@ int32_t flipper_geiger_app() {
     furi_timer_start(timer, 1000);
 
     // ENABLE 5V pin
+
     // Enable 5v power, multiple attempts to avoid issues with power chip protection false triggering
     uint8_t attempts = 0;
     while(!furi_hal_power_is_otg_enabled() && attempts++ < 5) {
@@ -408,6 +403,7 @@ int32_t flipper_geiger_app() {
     furi_hal_gpio_disable_int_callback(&gpio_ext_pa7);
     furi_hal_gpio_remove_int_callback(&gpio_ext_pa7);
     furi_hal_pwm_stop(FuriHalPwmOutputIdLptim2PA4);
+    furi_hal_gpio_init(&gpio_ext_pa7, GpioModeAnalog, GpioPullNo, GpioSpeedLow);
 
     furi_message_queue_free(event_queue);
     furi_mutex_free(mutexVal.mutex);

@@ -1,5 +1,4 @@
 #include "config.h"
-#include <datetime/datetime.h>
 #include <stdlib.h>
 #include <string.h>
 #include <flipper_format/flipper_format.h>
@@ -15,8 +14,8 @@
 #include "../crypto/constants.h"
 #include "migrations/common_migration.h"
 
-#define CONFIG_FILE_PATH             CONFIG_FILE_DIRECTORY_PATH "/totp.conf"
-#define CONFIG_FILE_BACKUP_DIR       CONFIG_FILE_DIRECTORY_PATH "/backups"
+#define CONFIG_FILE_PATH CONFIG_FILE_DIRECTORY_PATH "/totp.conf"
+#define CONFIG_FILE_BACKUP_DIR CONFIG_FILE_DIRECTORY_PATH "/backups"
 #define CONFIG_FILE_BACKUP_BASE_PATH CONFIG_FILE_BACKUP_DIR "/totp.conf"
 
 struct ConfigFileContext {

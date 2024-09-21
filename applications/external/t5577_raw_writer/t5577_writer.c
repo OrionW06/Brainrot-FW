@@ -540,9 +540,9 @@ static void t5577_writer_view_write_callback(Canvas* canvas, void* model) {
         canvas_draw_str_aligned(canvas, 93, 39, AlignCenter, AlignTop, "to Flipper's back");
     } else {
         canvas_set_bitmap_mode(canvas, true);
-        canvas_draw_icon(canvas, 0, 7, &I_RFIDDolphinSuccess_108x57);
+        canvas_draw_icon(canvas, 0, 9, &I_DolphinSuccess_91x55);
         canvas_set_font(canvas, FontPrimary);
-        canvas_draw_str(canvas, 72, 20, "Finished!");
+        canvas_draw_str(canvas, 75, 16, "Finished!");
     }
 }
 
@@ -637,7 +637,7 @@ static T5577WriterApp* t5577_writer_app_alloc() {
     app->view_dispatcher = view_dispatcher_alloc();
     app->dialogs = furi_record_open(RECORD_DIALOGS);
     app->file_path = furi_string_alloc();
-    view_dispatcher_enable_queue(app->view_dispatcher);
+
     view_dispatcher_attach_to_gui(app->view_dispatcher, gui, ViewDispatcherTypeFullscreen);
     view_dispatcher_set_event_callback_context(app->view_dispatcher, app);
     app->submenu = submenu_alloc();

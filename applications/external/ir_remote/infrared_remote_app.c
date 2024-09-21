@@ -17,18 +17,9 @@
 #include "infrared_signal.h"
 #include "infrared_remote.h"
 #include "infrared_remote_button.h"
-#define TAG            "ir_remote"
-#define MENU_BTN_TXT_X 36
+#define TAG "ir_remote"
 
 #include <flipper_format/flipper_format.h>
-
-struct InfraredSignal {
-    bool is_raw;
-    union {
-        InfraredMessage message;
-        InfraredRawSignal raw;
-    } payload;
-};
 
 typedef struct {
     int status;
@@ -44,7 +35,6 @@ typedef struct {
     FuriString* left_hold_button;
     FuriString* right_hold_button;
     FuriString* ok_hold_button;
-    bool repeat_signal;
     InfraredWorker* infrared_worker;
 } IRApp;
 
@@ -75,47 +65,17 @@ static void app_draw_callback(Canvas* canvas, void* ctx) {
         canvas_set_font(canvas, FontSecondary);
 
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            8,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->up_button));
+            canvas, 32, 8, AlignCenter, AlignCenter, furi_string_get_cstr(app->up_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            18,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->down_button));
+            canvas, 32, 18, AlignCenter, AlignCenter, furi_string_get_cstr(app->down_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            28,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->left_button));
+            canvas, 32, 28, AlignCenter, AlignCenter, furi_string_get_cstr(app->left_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            38,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->right_button));
+            canvas, 32, 38, AlignCenter, AlignCenter, furi_string_get_cstr(app->right_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            48,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->ok_button));
+            canvas, 32, 48, AlignCenter, AlignCenter, furi_string_get_cstr(app->ok_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            58,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->back_button));
+            canvas, 32, 58, AlignCenter, AlignCenter, furi_string_get_cstr(app->back_button));
 
         canvas_draw_line(canvas, 0, 65, 64, 65);
 
@@ -127,41 +87,21 @@ static void app_draw_callback(Canvas* canvas, void* ctx) {
         canvas_draw_icon(canvas, 0, 118, &I_back_10px);
 
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            73,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->up_hold_button));
+            canvas, 32, 73, AlignCenter, AlignCenter, furi_string_get_cstr(app->up_hold_button));
+        canvas_draw_str_aligned(
+            canvas, 32, 83, AlignCenter, AlignCenter, furi_string_get_cstr(app->down_hold_button));
+        canvas_draw_str_aligned(
+            canvas, 32, 93, AlignCenter, AlignCenter, furi_string_get_cstr(app->left_hold_button));
         canvas_draw_str_aligned(
             canvas,
-            MENU_BTN_TXT_X,
-            83,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->down_hold_button));
-        canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            93,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->left_hold_button));
-        canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
+            32,
             103,
             AlignCenter,
             AlignCenter,
             furi_string_get_cstr(app->right_hold_button));
         canvas_draw_str_aligned(
-            canvas,
-            MENU_BTN_TXT_X,
-            113,
-            AlignCenter,
-            AlignCenter,
-            furi_string_get_cstr(app->ok_hold_button));
-        canvas_draw_str_aligned(canvas, MENU_BTN_TXT_X, 123, AlignCenter, AlignCenter, "Exit App");
+            canvas, 32, 113, AlignCenter, AlignCenter, furi_string_get_cstr(app->ok_hold_button));
+        canvas_draw_str_aligned(canvas, 32, 123, AlignCenter, AlignCenter, "Exit App");
     }
 }
 
@@ -188,8 +128,6 @@ int32_t infrared_remote_app(char* p) {
     app->left_hold_button = furi_string_alloc();
     app->right_hold_button = furi_string_alloc();
     app->ok_hold_button = furi_string_alloc();
-    // Default repeat signal when hold
-    app->repeat_signal = true;
     app->view_port = view_port_alloc();
     app->infrared_worker = infrared_worker_alloc();
 
@@ -304,8 +242,6 @@ int32_t infrared_remote_app(char* p) {
         //set missing filenames to N/A
         //assign button signals
         size_t index = 0;
-        // Add rewind to fix the string ordering issue
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "UP", app->up_button)) {
             FURI_LOG_W(TAG, "Could not read UP string");
             furi_string_set(app->up_button, "N/A");
@@ -320,7 +256,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "DOWN", app->down_button)) {
             FURI_LOG_W(TAG, "Could not read DOWN string");
             furi_string_set(app->down_button, "N/A");
@@ -335,7 +270,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "LEFT", app->left_button)) {
             FURI_LOG_W(TAG, "Could not read LEFT string");
             furi_string_set(app->left_button, "N/A");
@@ -350,7 +284,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "RIGHT", app->right_button)) {
             FURI_LOG_W(TAG, "Could not read RIGHT string");
             furi_string_set(app->right_button, "N/A");
@@ -365,7 +298,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "OK", app->ok_button)) {
             FURI_LOG_W(TAG, "Could not read OK string");
             furi_string_set(app->ok_button, "N/A");
@@ -380,7 +312,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "BACK", app->back_button)) {
             FURI_LOG_W(TAG, "Could not read BACK string");
             furi_string_set(app->back_button, "N/A");
@@ -395,7 +326,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "UPHOLD", app->up_hold_button)) {
             FURI_LOG_W(TAG, "Could not read UPHOLD string");
             furi_string_set(app->up_hold_button, "N/A");
@@ -410,7 +340,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "DOWNHOLD", app->down_hold_button)) {
             FURI_LOG_W(TAG, "Could not read DOWNHOLD string");
             furi_string_set(app->down_hold_button, "N/A");
@@ -425,7 +354,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "LEFTHOLD", app->left_hold_button)) {
             FURI_LOG_W(TAG, "Could not read LEFTHOLD string");
             furi_string_set(app->left_hold_button, "N/A");
@@ -440,7 +368,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "RIGHTHOLD", app->right_hold_button)) {
             FURI_LOG_W(TAG, "Could not read RIGHTHOLD string");
             furi_string_set(app->right_hold_button, "N/A");
@@ -455,7 +382,6 @@ int32_t infrared_remote_app(char* p) {
             }
         }
 
-        flipper_format_rewind(ff);
         if(!flipper_format_read_string(ff, "OKHOLD", app->ok_hold_button)) {
             FURI_LOG_W(TAG, "Could not read OKHOLD string");
             furi_string_set(app->ok_hold_button, "N/A");
@@ -468,19 +394,6 @@ int32_t infrared_remote_app(char* p) {
                     infrared_remote_button_get_signal(infrared_remote_get_button(remote, index));
                 ok_hold_enabled = true;
             }
-        }
-
-        flipper_format_rewind(ff);
-        // Find REPEATSIGNAL in the txt file, else default set to true
-        if(!flipper_format_read_bool(ff, "REPEATSIGNAL", &app->repeat_signal, 1)) {
-            FURI_LOG_W(TAG, "Could not read REPEATSIGNAL string");
-        }
-
-        //Debug
-        if(app->repeat_signal) {
-            FURI_LOG_W(TAG, "repeat");
-        } else {
-            FURI_LOG_W(TAG, "not repeat");
         }
     }
 
@@ -534,227 +447,124 @@ int32_t infrared_remote_app(char* p) {
         }
     } else {
         view_port_update(app->view_port);
-        if(app->repeat_signal) {
-            // Repeat signal when hold
-            while(running) {
-                if(furi_message_queue_get(event_queue, &event, 100) == FuriStatusOk) {
-                    // short press signal
-                    if(event.type == InputTypeShort) {
-                        switch(event.key) {
-                        case InputKeyUp:
-                            if(up_enabled) {
-                                active_signal = up_signal;
-                                FURI_LOG_I(TAG, "up");
-                            }
-                            break;
-                        case InputKeyDown:
-                            if(down_enabled) {
-                                active_signal = down_signal;
-                                FURI_LOG_I(TAG, "down");
-                            }
-                            break;
-                        case InputKeyRight:
-                            if(right_enabled) {
-                                active_signal = right_signal;
-                                FURI_LOG_I(TAG, "right");
-                            }
-                            break;
-                        case InputKeyLeft:
-                            if(left_enabled) {
-                                active_signal = left_signal;
-                                FURI_LOG_I(TAG, "left");
-                            }
-                            break;
-                        case InputKeyOk:
-                            if(ok_enabled) {
-                                active_signal = ok_signal;
-                                FURI_LOG_I(TAG, "ok");
-                            }
-                            break;
-                        case InputKeyBack:
-                            if(back_enabled) {
-                                active_signal = back_signal;
-                                FURI_LOG_I(TAG, "back");
-                            }
-                            break;
-                        default:
-                            running = false;
-                            break;
+        while(running) {
+            if(furi_message_queue_get(event_queue, &event, 100) == FuriStatusOk) {
+                // short press signal
+                if(event.type == InputTypeShort) {
+                    switch(event.key) {
+                    case InputKeyUp:
+                        if(up_enabled) {
+                            active_signal = up_signal;
+                            FURI_LOG_I(TAG, "up");
                         }
-                        // long press signal
-                    } else if(event.type == InputTypeLong) {
-                        switch(event.key) {
-                        case InputKeyUp:
-                            if(up_hold_enabled) {
-                                active_signal = up_hold_signal;
-                                FURI_LOG_I(TAG, "up!");
-                            }
-                            break;
-                        case InputKeyDown:
-                            if(down_hold_enabled) {
-                                active_signal = down_hold_signal;
-                                FURI_LOG_I(TAG, "down!");
-                            }
-                            break;
-                        case InputKeyRight:
-                            if(right_hold_enabled) {
-                                active_signal = right_hold_signal;
-                                FURI_LOG_I(TAG, "right!");
-                            }
-                            break;
-                        case InputKeyLeft:
-                            if(left_hold_enabled) {
-                                active_signal = left_hold_signal;
-                                FURI_LOG_I(TAG, "left!");
-                            }
-                            break;
-                        case InputKeyOk:
-                            if(ok_hold_enabled) {
-                                active_signal = ok_hold_signal;
-                                FURI_LOG_I(TAG, "ok!");
-                            }
-                            break;
-                        default:
-                            running = false;
-                            break;
+                        break;
+                    case InputKeyDown:
+                        if(down_enabled) {
+                            active_signal = down_signal;
+                            FURI_LOG_I(TAG, "down");
                         }
-                    } else if(event.type == InputTypeRelease && is_transmitting) {
-                        notification_message(notification, &sequence_blink_stop);
+                        break;
+                    case InputKeyRight:
+                        if(right_enabled) {
+                            active_signal = right_signal;
+                            FURI_LOG_I(TAG, "right");
+                        }
+                        break;
+                    case InputKeyLeft:
+                        if(left_enabled) {
+                            active_signal = left_signal;
+                            FURI_LOG_I(TAG, "left");
+                        }
+                        break;
+                    case InputKeyOk:
+                        if(ok_enabled) {
+                            active_signal = ok_signal;
+                            FURI_LOG_I(TAG, "ok");
+                        }
+                        break;
+                    case InputKeyBack:
+                        if(back_enabled) {
+                            active_signal = back_signal;
+                            FURI_LOG_I(TAG, "back");
+                        }
+                        break;
+                    default:
+                        running = false;
+                        break;
+                    }
+                    // long press signal
+                } else if(event.type == InputTypeLong) {
+                    switch(event.key) {
+                    case InputKeyUp:
+                        if(up_hold_enabled) {
+                            active_signal = up_hold_signal;
+                            FURI_LOG_I(TAG, "up!");
+                        }
+                        break;
+                    case InputKeyDown:
+                        if(down_hold_enabled) {
+                            active_signal = down_hold_signal;
+                            FURI_LOG_I(TAG, "down!");
+                        }
+                        break;
+                    case InputKeyRight:
+                        if(right_hold_enabled) {
+                            active_signal = right_hold_signal;
+                            FURI_LOG_I(TAG, "right!");
+                        }
+                        break;
+                    case InputKeyLeft:
+                        if(left_hold_enabled) {
+                            active_signal = left_hold_signal;
+                            FURI_LOG_I(TAG, "left!");
+                        }
+                        break;
+                    case InputKeyOk:
+                        if(ok_hold_enabled) {
+                            active_signal = ok_hold_signal;
+                            FURI_LOG_I(TAG, "ok!");
+                        }
+                        break;
+                    default:
+                        running = false;
+                        break;
+                    }
+                } else if(event.type == InputTypeRelease && is_transmitting) {
+                    notification_message(notification, &sequence_blink_stop);
+                    infrared_worker_tx_stop(app->infrared_worker);
+                    is_transmitting = false;
+                    active_signal = NULL;
+                }
+
+                if(active_signal != NULL &&
+                   (event.type == InputTypeShort || event.type == InputTypeLong)) {
+                    if(is_transmitting) {
                         infrared_worker_tx_stop(app->infrared_worker);
-                        is_transmitting = false;
-                        active_signal = NULL;
                     }
-                    if(active_signal != NULL &&
-                       (event.type == InputTypeShort || event.type == InputTypeLong)) {
-                        if(is_transmitting) {
-                            infrared_worker_tx_stop(app->infrared_worker);
-                        }
-                        // Check the signal is raw
-                        if(active_signal->is_raw) {
-                            InfraredRawSignal* raw_signal =
-                                infrared_signal_get_raw_signal(active_signal);
-                            infrared_worker_set_raw_signal(
-                                app->infrared_worker,
-                                raw_signal->timings,
-                                raw_signal->timings_size,
-                                raw_signal->frequency,
-                                raw_signal->duty_cycle);
-                        } else {
-                            InfraredMessage* message = infrared_signal_get_message(active_signal);
-                            infrared_worker_set_decoded_signal(app->infrared_worker, message);
-                        }
 
-                        infrared_worker_tx_set_get_signal_callback(
+                    if(infrared_signal_is_raw(active_signal)) {
+                        InfraredRawSignal* raw_signal =
+                            infrared_signal_get_raw_signal(active_signal);
+                        infrared_worker_set_raw_signal(
                             app->infrared_worker,
-                            infrared_worker_tx_get_signal_steady_callback,
-                            app);
+                            raw_signal->timings,
+                            raw_signal->timings_size,
+                            raw_signal->frequency,
+                            raw_signal->duty_cycle);
+                    } else {
+                        InfraredMessage* message = infrared_signal_get_message(active_signal);
+                        infrared_worker_set_decoded_signal(app->infrared_worker, message);
+                    }
 
-                        infrared_worker_tx_start(app->infrared_worker);
-                        notification_message(notification, &sequence_blink_start_magenta);
-                        is_transmitting = true;
-                    }
+                    infrared_worker_tx_set_get_signal_callback(
+                        app->infrared_worker, infrared_worker_tx_get_signal_steady_callback, app);
+
+                    infrared_worker_tx_start(app->infrared_worker);
+                    notification_message(notification, &sequence_blink_start_magenta);
+                    is_transmitting = true;
                 }
             }
-        } else {
-            // Not repeat signal when hold
-            while(running) {
-                if(furi_message_queue_get(event_queue, &event, 100) == FuriStatusOk) {
-                    // short press signal
-                    if(event.type == InputTypeShort) {
-                        switch(event.key) {
-                        case InputKeyUp:
-                            if(up_enabled) {
-                                infrared_signal_transmit(up_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "up");
-                            }
-                            break;
-                        case InputKeyDown:
-                            if(down_enabled) {
-                                infrared_signal_transmit(down_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "down");
-                            }
-                            break;
-                        case InputKeyRight:
-                            if(right_enabled) {
-                                infrared_signal_transmit(right_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "right");
-                            }
-                            break;
-                        case InputKeyLeft:
-                            if(left_enabled) {
-                                infrared_signal_transmit(left_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "left");
-                            }
-                            break;
-                        case InputKeyOk:
-                            if(ok_enabled) {
-                                infrared_signal_transmit(ok_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "ok");
-                            }
-                            break;
-                        case InputKeyBack:
-                            if(back_enabled) {
-                                infrared_signal_transmit(back_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "back");
-                            }
-                            break;
-                        default:
-                            running = false;
-                            break;
-                        }
-                        // long press signal
-                    } else if(event.type == InputTypeLong) {
-                        switch(event.key) {
-                        case InputKeyUp:
-                            if(up_hold_enabled) {
-                                infrared_signal_transmit(up_hold_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "up!");
-                            }
-                            break;
-                        case InputKeyDown:
-                            if(down_hold_enabled) {
-                                infrared_signal_transmit(down_hold_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "down!");
-                            }
-                            break;
-                        case InputKeyRight:
-                            if(right_hold_enabled) {
-                                infrared_signal_transmit(right_hold_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "right!");
-                            }
-                            break;
-                        case InputKeyLeft:
-                            if(left_hold_enabled) {
-                                infrared_signal_transmit(left_hold_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "left!");
-                            }
-                            break;
-                        case InputKeyOk:
-                            if(ok_hold_enabled) {
-                                infrared_signal_transmit(ok_hold_signal);
-                                notification_message(notification, &sequence_blink_start_magenta);
-                                FURI_LOG_I(TAG, "ok!");
-                            }
-                            break;
-                        default:
-                            running = false;
-                            break;
-                        }
-                    } else if(event.type == InputTypeRelease) {
-                        notification_message(notification, &sequence_blink_stop);
-                    }
-                }
-            }
+            view_port_update(app->view_port);
         }
     }
 

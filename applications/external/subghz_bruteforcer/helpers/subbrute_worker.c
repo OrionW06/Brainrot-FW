@@ -6,7 +6,8 @@
 #include <flipper_format_i.h>
 #include <lib/subghz/subghz_protocol_registry.h>
 
-#define TAG                               "SubBruteWorker"
+#define TAG "SubBruteWorker"
+
 #define SUBBRUTE_TX_TIMEOUT               6
 #define SUBBRUTE_MANUAL_TRANSMIT_INTERVAL 250
 

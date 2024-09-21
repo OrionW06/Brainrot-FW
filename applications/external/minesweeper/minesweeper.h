@@ -24,6 +24,8 @@
 #include "helpers/mine_sweeper_storage.h"
 #include "minesweeper_redux_icons.h"
 
+#include <assets_icons.h>
+
 #define TAG "Mine Sweeper Application"
 
 // This is a helper struct for the settings view/scene
@@ -60,7 +62,6 @@ typedef struct MineSweeperApp {
     bool ensure_map_solvable;
 
     uint8_t feedback_enabled;
-    uint8_t wrap_enabled;
 } MineSweeperApp;
 
 // View Id Enumeration

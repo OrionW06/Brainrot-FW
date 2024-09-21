@@ -1,11 +1,13 @@
 #include <stdlib.h>
+
 #include <flappy_bird_icons.h>
 #include <furi.h>
 #include <gui/gui.h>
 #include <input/input.h>
 #include <dolphin/dolphin.h>
 
-#define TAG   "Flappy"
+#define TAG "Flappy"
+
 #define DEBUG false
 
 #define FLAPPY_BIRD_HEIGHT 15
@@ -264,10 +266,6 @@ static void flappy_game_render_callback(Canvas* const canvas, void* ctx) {
         canvas_set_font(canvas, FontPrimary);
         canvas_draw_str(canvas, 37, 31, "Game Over");
 
-        if(game_state->points != 0 && game_state->points % 5 == 0) {
-            dolphin_deed(getRandomDeed());
-        }
-
         canvas_set_font(canvas, FontSecondary);
         char buffer[12];
         snprintf(buffer, sizeof(buffer), "Score: %u", game_state->points);
@@ -321,6 +319,9 @@ int32_t flappy_game_app(void* p) {
     // Open GUI and register view_port
     Gui* gui = furi_record_open(RECORD_GUI);
     gui_add_view_port(gui, view_port, GuiLayerFullscreen);
+
+    // Call dolphin deed on game start
+    dolphin_deed(DolphinDeedPluginGameStart);
 
     GameEvent event;
     for(bool processing = true; processing;) {

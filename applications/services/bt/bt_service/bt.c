@@ -17,7 +17,6 @@
 
 #define ICON_SPACER 2
 
-/*
 static void bt_draw_statusbar_callback(Canvas* canvas, void* context) {
     furi_assert(context);
 
@@ -41,7 +40,6 @@ static ViewPort* bt_statusbar_view_port_alloc(Bt* bt) {
     view_port_enabled_set(statusbar_view_port, false);
     return statusbar_view_port;
 }
-*/
 
 static void bt_pin_code_view_port_draw_callback(Canvas* canvas, void* context) {
     furi_assert(context);
@@ -88,8 +86,13 @@ static ViewPort* bt_pin_code_view_port_alloc(Bt* bt) {
 
 static void bt_pin_code_show(Bt* bt, uint32_t pin_code) {
     bt->pin_code = pin_code;
-    if(bt->suppress_pin_screen) return;
+    if(!bt->pin_code_view_port) {
+        // Pin code view port
+        bt->pin_code_view_port = bt_pin_code_view_port_alloc(bt);
+        gui_add_view_port(bt->gui, bt->pin_code_view_port, GuiLayerFullscreen);
+    }
     notification_message(bt->notification, &sequence_display_backlight_on);
+    if(bt->suppress_pin_screen) return;
 
     gui_view_port_send_to_front(bt->gui, bt->pin_code_view_port);
     view_port_enabled_set(bt->pin_code_view_port, true);
@@ -105,8 +108,8 @@ static void bt_pin_code_hide(Bt* bt) {
 static bool bt_pin_code_verify_event_handler(Bt* bt, uint32_t pin) {
     furi_assert(bt);
     bt->pin_code = pin;
-    if(bt->suppress_pin_screen) return true;
     notification_message(bt->notification, &sequence_display_backlight_on);
+    if(bt->suppress_pin_screen) return true;
 
     FuriString* pin_str;
     if(!bt->dialog_message) {
@@ -161,12 +164,12 @@ Bt* bt_alloc(void) {
     bt->message_queue = furi_message_queue_alloc(8, sizeof(BtMessage));
 
     // Setup statusbar view port
-    bt->pin_code_view_port = bt_pin_code_view_port_alloc(bt);
+    bt->statusbar_view_port = bt_statusbar_view_port_alloc(bt);
     // Notification
     bt->notification = furi_record_open(RECORD_NOTIFICATION);
     // Gui
     bt->gui = furi_record_open(RECORD_GUI);
-    gui_add_view_port(bt->gui, bt->pin_code_view_port, GuiLayerFullscreen);
+    gui_add_view_port(bt->gui, bt->statusbar_view_port, GuiLayerStatusBarLeft);
 
     // Dialogs
     bt->dialogs = furi_record_open(RECORD_DIALOGS);
@@ -341,7 +344,6 @@ static void bt_on_key_storage_change_callback(uint8_t* addr, uint16_t size, void
         furi_message_queue_put(bt->message_queue, &message, FuriWaitForever) == FuriStatusOk);
 }
 
-/*
 static void bt_statusbar_update(Bt* bt) {
     uint8_t active_icon_width = 0;
     if(bt->beacon_active) {
@@ -360,7 +362,6 @@ static void bt_statusbar_update(Bt* bt) {
         view_port_enabled_set(bt->statusbar_view_port, false);
     }
 }
-*/
 
 static void bt_show_warning(Bt* bt, const char* text) {
     if(!bt->dialog_message) {
@@ -577,7 +578,7 @@ int32_t bt_srv(void* p) {
             furi_message_queue_get(bt->message_queue, &message, FuriWaitForever) == FuriStatusOk);
         if(message.type == BtMessageTypeUpdateStatus) {
             // Update view ports
-            // bt_statusbar_update(bt);
+            bt_statusbar_update(bt);
             bt_pin_code_hide(bt);
             if(bt->status_changed_cb) {
                 bt->status_changed_cb(bt->status, bt->status_changed_ctx);

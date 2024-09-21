@@ -5,8 +5,6 @@
 #include <furi/core/mutex.h>
 #include "../../types/automation_kb_layout.h"
 
-#define TOTP_BT_KEYS_STORAGE_PATH EXT_PATH("apps_data/authenticator/.bt_hid.keys")
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -19,6 +17,7 @@ typedef struct TotpBtTypeCodeWorkerContext TotpBtTypeCodeWorkerContext;
  * @brief Bluetooth token input automation worker events
  */
 enum TotpBtTypeCodeWorkerEvents {
+
     /**
      * @brief Reserved, should not be used anywhere
      */

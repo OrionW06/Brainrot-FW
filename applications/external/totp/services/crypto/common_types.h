@@ -5,6 +5,7 @@
 typedef uint8_t CryptoSeedIVResult;
 
 enum CryptoSeedIVResults {
+
     /**
      * @brief IV seeding operation failed
      */

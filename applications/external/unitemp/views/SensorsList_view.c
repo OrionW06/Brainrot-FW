@@ -18,6 +18,7 @@
 #include "UnitempViews.h"
 #include <gui/modules/variable_item_list.h>
 #include <stdio.h>
+#include "unitemp_icons.h"
 
 //Текущий вид
 static View* view;
@@ -75,11 +76,11 @@ static void _enter_callback(void* context, uint32_t index) {
     if(unitemp_gpio_getAviablePort(type->interface, 0, NULL) == NULL) {
         if(type->interface == &SINGLE_WIRE || type->interface == &ONE_WIRE) {
             unitemp_popup(
-                &I_Cry_dolph_55x52, "Sensor is unavailable", "All GPIOs\nare busy", VIEW_ID);
+                &I_dolph_cry_49x54, "Sensor is unavailable", "All GPIOs\nare busy", VIEW_ID);
         }
         if(type->interface == &I2C) {
             unitemp_popup(
-                &I_Cry_dolph_55x52, "Sensor is unavailable", "GPIOs 15 or 16\nare busy", VIEW_ID);
+                &I_dolph_cry_49x54, "Sensor is unavailable", "GPIOs 15 or 16\nare busy", VIEW_ID);
         }
         return;
     }

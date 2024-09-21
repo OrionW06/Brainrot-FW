@@ -17,8 +17,8 @@
 #include "views/color_guess_startscreen.h"
 #include "helpers/color_guess_storage.h"
 
-#define COLOR_GUESS_VERSION FAP_VERSION
-#define TAG                 "Color_Guess"
+#define COLOR_GUESS_VERSION "1.5"
+#define TAG "Color_Guess"
 
 typedef struct {
     Gui* gui;

@@ -3,9 +3,4 @@
 
 typedef uint8_t EventType;
 
-enum EventTypes {
-    EventTypeTick,
-    EventTypeKey,
-    EventForceCloseApp,
-    EventForceRedraw
-};
+enum EventTypes { EventTypeTick, EventTypeKey, EventForceCloseApp, EventForceRedraw };

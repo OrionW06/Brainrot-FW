@@ -1,6 +1,5 @@
 #include "gb_live_camera.h"
 #include <malveke_gb_live_camera_icons.h>
-#include <datetime/datetime.h>
 
 static void gb_live_camera_view_draw_callback(Canvas* canvas, void* _model) {
     UartDumpModel* model = _model;
@@ -268,7 +267,7 @@ static UartEchoApp* gb_live_camera_app_alloc() {
 
     // View dispatcher
     app->view_dispatcher = view_dispatcher_alloc();
-    view_dispatcher_enable_queue(app->view_dispatcher);
+
     view_dispatcher_attach_to_gui(app->view_dispatcher, app->gui, ViewDispatcherTypeFullscreen);
 
     //  Turn backlight on

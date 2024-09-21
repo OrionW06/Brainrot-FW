@@ -10,8 +10,9 @@
 #include <qrcode_icons.h>
 #include "qrcode.h"
 
-#define TAG                 "qrcode"
-#define QRCODE_FOLDER       EXT_PATH("apps_data/qrcodes")
+#define TAG "qrcode"
+
+#define QRCODE_FOLDER       STORAGE_APP_DATA_PATH_PREFIX
 #define QRCODE_EXTENSION    ".qrcode"
 #define QRCODE_FILETYPE     "QRCode"
 #define QRCODE_FILE_VERSION 1
@@ -745,13 +746,7 @@ int32_t qrcode_app(void* p) {
     FuriString* file_path = furi_string_alloc();
 
     Storage* storage = furi_record_open(RECORD_STORAGE);
-    if(storage_common_stat(storage, QRCODE_FOLDER, NULL) == FSE_NOT_EXIST) {
-        if(!storage_simply_mkdir(storage, QRCODE_FOLDER)) {
-            return 0;
-        }
-    }
-    storage_common_copy(storage, ANY_PATH("qrcodes"), QRCODE_FOLDER);
-    storage_common_remove(storage, ANY_PATH("qrcodes"));
+    storage_common_migrate(storage, EXT_PATH("qrcodes"), QRCODE_FOLDER);
     furi_record_close(RECORD_STORAGE);
 
     do {

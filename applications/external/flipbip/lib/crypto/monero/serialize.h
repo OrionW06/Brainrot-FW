@@ -2,7 +2,7 @@
 // Created by Dusan Klinec on 02/05/2018.
 //
 
-#ifdef USE_MONERO
+#if USE_MONERO
 
 #ifndef TREZOR_XMR_SERIALIZE_H
 #define TREZOR_XMR_SERIALIZE_H

@@ -1,4 +1,5 @@
 #include "loader.h"
+
 #include <furi.h>
 #include <cli/cli.h>
 #include <applications.h>
@@ -11,8 +12,7 @@ static void loader_cli_print_usage(void) {
     printf("loader <cmd> <args>\r\n");
     printf("Cmd list:\r\n");
     printf("\tlist\t - List available applications\r\n");
-    printf(
-        "\topen \"<Application Name:string>\" \"<parameter:string>\"\t - Open application by name with (optional) parameter\r\n");
+    printf("\topen <Application Name:string>\t - Open application by name\r\n");
     printf("\tinfo\t - Show loader state\r\n");
     printf("\tclose\t - Close the current application\r\n");
     printf("\tsignal <signal:number> [arg:hex]\t - Send a signal with an optional argument\r\n");
@@ -30,11 +30,6 @@ static void loader_cli_list(void) {
     for(size_t i = 0; i < FLIPPER_SETTINGS_APPS_COUNT; i++) {
         printf("\t%s\r\n", FLIPPER_SETTINGS_APPS[i].name);
     }
-    for(size_t i = 0; i < FLIPPER_EXTSETTINGS_APPS_COUNT; i++) {
-        printf("\t%s\r\n", FLIPPER_EXTSETTINGS_APPS[i].name);
-    }
-    printf(
-        "For external applications, specify full path to '.fap' file.\r\nExample: \"/ext/apps/Main/clock.fap\"");
 }
 
 static void loader_cli_info(Loader* loader) {
@@ -51,18 +46,15 @@ static void loader_cli_info(Loader* loader) {
 
 static void loader_cli_open(FuriString* args, Loader* loader) {
     FuriString* app_name = furi_string_alloc();
-    FuriString* param = furi_string_alloc();
 
     do {
         if(!args_read_probably_quoted_string_and_trim(args, app_name)) {
             printf("No application provided\r\n");
             break;
         }
-        args_read_probably_quoted_string_and_trim(args, param);
+        furi_string_trim(args);
 
-        furi_string_trim(param);
-
-        const char* args_str = furi_string_get_cstr(param);
+        const char* args_str = furi_string_get_cstr(args);
         if(strlen(args_str) == 0) {
             args_str = NULL;
         }
@@ -129,39 +121,21 @@ static void loader_cli(Cli* cli, FuriString* args, void* context) {
     FuriString* cmd;
     cmd = furi_string_alloc();
 
-    do {
-        if(!args_read_string_and_trim(args, cmd)) {
-            loader_cli_print_usage();
-            break;
-        }
-
-        if(furi_string_cmp_str(cmd, "list") == 0) {
-            loader_cli_list();
-            break;
-        }
-
-        if(furi_string_cmp_str(cmd, "open") == 0) {
-            loader_cli_open(args, loader);
-            break;
-        }
-
-        if(furi_string_cmp_str(cmd, "info") == 0) {
-            loader_cli_info(loader);
-            break;
-        }
-
-        if(furi_string_cmp_str(cmd, "close") == 0) {
-            loader_cli_close(loader);
-            break;
-        }
-
-        if(furi_string_cmp_str(cmd, "signal") == 0) {
-            loader_cli_signal(args, loader);
-            break;
-        }
-
+    if(!args_read_string_and_trim(args, cmd)) {
         loader_cli_print_usage();
-    } while(false);
+    } else if(furi_string_equal(cmd, "list")) {
+        loader_cli_list();
+    } else if(furi_string_equal(cmd, "open")) {
+        loader_cli_open(args, loader);
+    } else if(furi_string_equal(cmd, "info")) {
+        loader_cli_info(loader);
+    } else if(furi_string_equal(cmd, "close")) {
+        loader_cli_close(loader);
+    } else if(furi_string_equal(cmd, "signal")) {
+        loader_cli_signal(args, loader);
+    } else {
+        loader_cli_print_usage();
+    }
 
     furi_string_free(cmd);
     furi_record_close(RECORD_LOADER);

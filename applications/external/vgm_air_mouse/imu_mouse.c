@@ -22,18 +22,15 @@ typedef enum {
     ImuMouseNewData = (1 << 1),
     ImuMouseRightPress = (1 << 2),
     ImuMouseRightRelease = (1 << 3),
-    ImuMouseWheelPress = (1 << 4),
-    ImuMouseWheelRelease = (1 << 5),
-    ImuMouseLeftPress = (1 << 6),
-    ImuMouseLeftRelease = (1 << 7),
-    ImuMouseScrollOn = (1 << 8),
-    ImuMouseScrollOff = (1 << 9),
+    ImuMouseLeftPress = (1 << 4),
+    ImuMouseLeftRelease = (1 << 5),
+    ImuMouseScrollOn = (1 << 6),
+    ImuMouseScrollOff = (1 << 7),
 } ImuThreadFlags;
 
-#define FLAGS_ALL                                                                          \
-    (ImuMouseStop | ImuMouseNewData | ImuMouseRightPress | ImuMouseRightRelease |          \
-     ImuMouseWheelPress | ImuMouseWheelRelease | ImuMouseLeftPress | ImuMouseLeftRelease | \
-     ImuMouseScrollOn | ImuMouseScrollOff)
+#define FLAGS_ALL                                                                 \
+    (ImuMouseStop | ImuMouseNewData | ImuMouseRightPress | ImuMouseRightRelease | \
+     ImuMouseLeftPress | ImuMouseLeftRelease | ImuMouseScrollOn | ImuMouseScrollOff)
 
 typedef struct {
     float q0;
@@ -182,12 +179,6 @@ static int32_t imu_thread(void* context) {
         if(events & ImuMouseRightRelease) {
             imu->hid->mouse_key_release(imu->hid_inst, HID_MOUSE_BTN_RIGHT);
         }
-        if(events & ImuMouseWheelPress) {
-            imu->hid->mouse_key_press(imu->hid_inst, HID_MOUSE_BTN_WHEEL);
-        }
-        if(events & ImuMouseWheelRelease) {
-            imu->hid->mouse_key_release(imu->hid_inst, HID_MOUSE_BTN_WHEEL);
-        }
         if(events & ImuMouseLeftPress) {
             imu->hid->mouse_key_press(imu->hid_inst, HID_MOUSE_BTN_LEFT);
         }
@@ -246,7 +237,7 @@ static int32_t imu_thread(void* context) {
                         float mouse_y = CLAMP(diff_y, 127.f, -127.f);
 
                         imu->hid->mouse_move(
-                            imu->hid_inst, mouse_exp_rate(mouse_x), -mouse_exp_rate(mouse_y));
+                            imu->hid_inst, mouse_exp_rate(mouse_x), mouse_exp_rate(mouse_y));
 
                         diff_x -= (float)(int8_t)mouse_x;
                         diff_y -= (float)(int8_t)mouse_y;
@@ -268,12 +259,8 @@ void imu_mouse_key_press(ImuThread* imu, ImuMouseKey key, bool state) {
     uint32_t flag = 0;
     if(key == ImuMouseKeyRight) {
         flag = (state) ? (ImuMouseRightPress) : (ImuMouseRightRelease);
-    } else if(key == ImuMouseKeyWheel) {
-        flag = (state) ? (ImuMouseWheelPress) : (ImuMouseWheelRelease);
     } else if(key == ImuMouseKeyLeft) {
         flag = (state) ? (ImuMouseLeftPress) : (ImuMouseLeftRelease);
-    } else {
-        furi_crash();
     }
 
     furi_thread_flags_set(furi_thread_get_id(imu->thread), flag);

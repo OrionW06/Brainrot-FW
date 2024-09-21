@@ -13,6 +13,7 @@ typedef struct TotpUsbTypeCodeWorkerContext TotpUsbTypeCodeWorkerContext;
  * @brief USB token input automation worker events
  */
 enum TotpUsbTypeCodeWorkerEvents {
+
     /**
      * @brief Reserved, should not be used anywhere
      */

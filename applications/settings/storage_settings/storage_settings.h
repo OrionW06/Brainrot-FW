@@ -13,7 +13,6 @@
 
 #include <storage/storage.h>
 #include <storage/storage_sd_api.h>
-#include <assets_icons.h>
 
 #include "scenes/storage_settings_scene.h"
 

@@ -6,7 +6,8 @@
 #include <furi_hal_infrared.h>
 #include <gui/gui.h>
 
-#define TAG  "IR Scope"
+#define TAG "IR Scope"
+
 #define COLS 128
 #define ROWS 8
 

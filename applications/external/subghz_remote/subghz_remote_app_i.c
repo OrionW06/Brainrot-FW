@@ -3,7 +3,6 @@
 #include <flipper_format/flipper_format_i.h>
 
 #include "helpers/txrx/subghz_txrx.h"
-#include <lib/subghz/protocols/protocol_items.h>
 #ifndef FW_ORIGIN_Official
 #include <lib/subghz/blocks/custom_btn.h>
 #endif
@@ -97,7 +96,7 @@ static bool subrem_map_preset_load(SubRemMapPreset* map_preset, FlipperFormat* f
             ret = true;
         }
         if(ret) {
-            // Preload successful
+            // Preload seccesful
             FURI_LOG_I(
                 TAG,
                 "%-5s: %s %s",
@@ -141,9 +140,9 @@ SubRemLoadMapState subrem_map_file_load(SubGhzRemoteApp* app, const char* file_p
     }
 
     if(ret == SubRemLoadMapStateOK) {
-        FURI_LOG_I(TAG, "Load Map File Successful");
+        FURI_LOG_I(TAG, "Load Map File Seccesful");
     } else if(ret == SubRemLoadMapStateNotAllOK) {
-        FURI_LOG_I(TAG, "Load Map File Successful [Not all files]");
+        FURI_LOG_I(TAG, "Load Map File Seccesful [Not all files]");
     } else {
         FURI_LOG_E(TAG, "Broken Map File");
     }

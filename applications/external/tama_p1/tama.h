@@ -3,7 +3,8 @@
 #include <input/input.h>
 #include "tamalib/tamalib.h"
 
-#define TAG                      "TamaP1"
+#define TAG "TamaP1"
+
 #define TAMA_ROM_PATH            APP_ASSETS_PATH("rom.bin")
 #define TAMA_SCREEN_SCALE_FACTOR 2
 #define TAMA_LCD_ICON_SIZE       14
@@ -11,7 +12,7 @@
 
 #define STATE_FILE_MAGIC   "TLST"
 #define STATE_FILE_VERSION 2
-#define TAMA_SAVE_PATH     APP_ASSETS_PATH("save.bin")
+#define TAMA_SAVE_PATH     APP_DATA_PATH("save.bin")
 
 typedef struct {
     FuriThread* thread;

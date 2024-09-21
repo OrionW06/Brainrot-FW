@@ -13,6 +13,10 @@ An example file can be found in the repository
 Any feedback is welcome and would be very much appreciated as this is my first C project
 - <a href="https://github.com/acegoal07/FlipperZero_NFC_Playlist/issues/new?assignees=acegoal07&labels=enhancement&projects=&template=feature_request.md&title=%5BFEATURE%7D">Feature request</a>
 - <a href="https://github.com/acegoal07/FlipperZero_NFC_Playlist/issues/new?assignees=acegoal07&labels=bug&projects=&template=bug_report.md&title=%5BBUG%5D">Bug report</a>
+## Supported Firmwares
+As i know these firmwares are supported and working if you know any more please let me know
+- <a href="https://github.com/Next-Flip/Momentum-Firmware">Momentum</a>
+- <a href="https://github.com/RogueMaster/flipperzero-firmware-wPlugins">RogueMaster</a>
 ## Settings:
 - Emulate time (How long the NFC card will be emulated for)
 - Delay time (How long the gap between the cards will be)

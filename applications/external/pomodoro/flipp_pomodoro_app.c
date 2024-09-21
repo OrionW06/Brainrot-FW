@@ -63,7 +63,6 @@ FlippPomodoroApp* flipp_pomodoro_app_alloc() {
     app->view_dispatcher = view_dispatcher_alloc();
     app->statistics = flipp_pomodoro_statistics__new();
 
-    view_dispatcher_enable_queue(app->view_dispatcher);
     view_dispatcher_set_event_callback_context(app->view_dispatcher, app);
     view_dispatcher_set_custom_event_callback(
         app->view_dispatcher, flipp_pomodoro_app_custom_event_callback);
@@ -111,6 +110,7 @@ int32_t flipp_pomodoro_app(void* p) {
     FlippPomodoroApp* app = flipp_pomodoro_app_alloc();
 
     FURI_LOG_I(TAG, "Run deed added");
+    dolphin_deed(DolphinDeedPluginGameStart);
 
     view_dispatcher_run(app->view_dispatcher);
 

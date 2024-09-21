@@ -21,7 +21,7 @@
 #include <notification/notification.h>
 #include <notification/notification_messages.h>
 
-#include "intervalometer_icons.h"
+#include <ir_intervalometer_icons.h>
 
 // app ui scenes
 enum flipvalo_ui_scene {
@@ -478,9 +478,9 @@ static void flipvalo_run_state_init(struct flipvalo_run_state* fv_run_state) {
     fv_run_state->tick_cur = 0;
 }
 
-static void input_callback(InputEvent* input_event, void* ctx) {
-    furi_assert(ctx);
-    FuriMessageQueue* event_queue = ctx;
+static void input_callback(InputEvent* input_event, void* event_queue_void) {
+    FuriMessageQueue* event_queue = (FuriMessageQueue*)event_queue_void;
+    furi_assert(event_queue);
     struct plugin_event event = {.type = EventTypeKey, .input = *input_event};
     furi_message_queue_put(event_queue, &event, FuriWaitForever);
 }

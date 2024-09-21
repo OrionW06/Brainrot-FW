@@ -11,7 +11,8 @@
 #include <input/input.h>
 #include <storage/storage.h>
 
-#define TAG                   "PCMonitor"
+#define TAG "PCMonitor"
+
 #define BT_SERIAL_BUFFER_SIZE 128
 
 #define SCREEN_HEIGHT 64

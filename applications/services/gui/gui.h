@@ -18,11 +18,8 @@ typedef enum {
 
     GuiLayerWindow, /**< Window layer, status bar is shown */
 
-    GuiLayerStatusBarTop, /**< Status bar top side layer */
     GuiLayerStatusBarLeft, /**< Status bar left-side layer, auto-layout */
-    GuiLayerStatusBarLeftSlim, /**< Status bar left-side layer, auto-layout */
     GuiLayerStatusBarRight, /**< Status bar right-side layer, auto-layout */
-    GuiLayerStatusBarRightSlim, /**< Status bar right-side layer, auto-layout */
 
     GuiLayerFullscreen, /**< Fullscreen layer, no status bar */
 
@@ -143,8 +140,6 @@ Canvas* gui_direct_draw_acquire(Gui* gui);
  * @param      gui   Gui instance
  */
 void gui_direct_draw_release(Gui* gui);
-
-uint8_t gui_get_count_of_enabled_view_port_in_layer(Gui* gui, GuiLayer layer);
 
 #ifdef __cplusplus
 }

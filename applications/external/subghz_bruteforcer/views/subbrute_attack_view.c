@@ -1,10 +1,13 @@
 #include "subbrute_attack_view.h"
 #include "../subbrute_i.h"
+#include "../helpers/gui_top_buttons.h"
 
 #include <input/input.h>
 #include <gui/elements.h>
 #include <gui/icon_animation.h>
 #include <subghz_bruteforcer_icons.h>
+
+#include <assets_icons.h>
 
 #define TAG "SubBruteAttackView"
 
@@ -309,8 +312,8 @@ void subbrute_attack_view_draw(Canvas* canvas, void* context) {
         elements_button_left(canvas, "-1");
         elements_button_right(canvas, "+1");
         elements_button_center(canvas, "Start");
-        elements_button_up(canvas, "Save");
-        elements_button_down(canvas, "Resend");
+        elements_button_top_left(canvas, "Save");
+        elements_button_top_right(canvas, "Resend");
     } else {
         // canvas_draw_icon_animation
         const uint8_t icon_h_offset = 0;

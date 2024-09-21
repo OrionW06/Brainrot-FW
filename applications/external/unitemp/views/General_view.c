@@ -16,6 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 #include "UnitempViews.h"
+#include "unitemp_icons.h"
+
+#include <assets_icons.h>
 
 static View* view;
 
@@ -91,36 +94,21 @@ static void _draw_temperature(Canvas* canvas, Sensor* sensor, uint8_t x, uint8_t
 }
 
 static void _draw_humidity(Canvas* canvas, Sensor* sensor, const uint8_t pos[2]) {
-    // Drawing the frame
+    //Рисование рамки
     canvas_draw_rframe(canvas, pos[0], pos[1], 54, 20, 3);
     canvas_draw_rframe(canvas, pos[0], pos[1], 54, 19, 3);
 
-    // Drawing the icon
+    //Рисование иконки
     canvas_draw_icon(canvas, pos[0] + 3, pos[1] + 2, &I_hum_9x15);
 
-    if(app->settings.humidity_unit == UT_HUMIDITY_RELATIVE) {
-        // Relative humidity
-        snprintf(app->buff, BUFF_SIZE, "%d", (uint8_t)sensor->hum);
-        canvas_set_font(canvas, FontBigNumbers);
-        canvas_draw_str_aligned(
-            canvas, pos[0] + 27, pos[1] + 10, AlignCenter, AlignCenter, app->buff);
-        uint8_t int_len = canvas_string_width(canvas, app->buff);
-        // Adding '%' for relative humidity
-        canvas_set_font(canvas, FontPrimary);
-        canvas_draw_str(canvas, pos[0] + 27 + int_len / 2 + 4, pos[1] + 10 + 7, "%");
-    } else if(app->settings.humidity_unit == UT_HUMIDITY_DEWPOINT) {
-        // Dewpoint with a decimal
-        int humidity_dec = abs((int16_t)(sensor->hum * 10) % 10);
-        snprintf(app->buff, BUFF_SIZE, "%d", (int16_t)sensor->hum);
-        canvas_set_font(canvas, FontBigNumbers);
-        canvas_draw_str_aligned(
-            canvas, pos[0] + 27, pos[1] + 10, AlignCenter, AlignCenter, app->buff);
-        uint8_t int_len = canvas_string_width(canvas, app->buff);
-        // Printing the decimal part similar to temperature display
-        snprintf(app->buff, BUFF_SIZE, ".%d", humidity_dec);
-        canvas_set_font(canvas, FontPrimary);
-        canvas_draw_str(canvas, pos[0] + 27 + int_len / 2 + 2, pos[1] + 10 + 7, app->buff);
-    }
+    //Целая часть влажности
+    snprintf(app->buff, BUFF_SIZE, "%d", (uint8_t)sensor->hum);
+    canvas_set_font(canvas, FontBigNumbers);
+    canvas_draw_str_aligned(canvas, pos[0] + 27, pos[1] + 10, AlignCenter, AlignCenter, app->buff);
+    uint8_t int_len = canvas_string_width(canvas, app->buff);
+    //Единица измерения
+    canvas_set_font(canvas, FontPrimary);
+    canvas_draw_str(canvas, pos[0] + 27 + int_len / 2 + 4, pos[1] + 10 + 7, "%");
 }
 
 static void _draw_heat_index(Canvas* canvas, Sensor* sensor, const uint8_t pos[2]) {
@@ -153,8 +141,13 @@ static void _draw_heat_index(Canvas* canvas, Sensor* sensor, const uint8_t pos[2
 static void _draw_pressure(Canvas* canvas, Sensor* sensor) {
     const uint8_t x = 29, y = 39;
     //Рисование рамки
-    canvas_draw_rframe(canvas, x, y, 76, 20, 3);
-    canvas_draw_rframe(canvas, x, y, 76, 19, 3);
+    if(app->settings.pressure_unit == UT_PRESSURE_HPA) {
+        canvas_draw_rframe(canvas, x, y, 84, 20, 3);
+        canvas_draw_rframe(canvas, x, y, 84, 19, 3);
+    } else {
+        canvas_draw_rframe(canvas, x, y, 69, 20, 3);
+        canvas_draw_rframe(canvas, x, y, 69, 19, 3);
+    }
 
     //Рисование иконки
     canvas_draw_icon(canvas, x + 3, y + 4, &I_pressure_7x13);
@@ -167,7 +160,7 @@ static void _draw_pressure(Canvas* canvas, Sensor* sensor) {
     snprintf(app->buff, BUFF_SIZE, "%d", press_int);
     canvas_set_font(canvas, FontBigNumbers);
     canvas_draw_str_aligned(
-        canvas, x + 28 + ((press_int > 99) ? 5 : 0), y + 10, AlignCenter, AlignCenter, app->buff);
+        canvas, x + 27 + ((press_int > 99) ? 5 : 0), y + 10, AlignCenter, AlignCenter, app->buff);
     //Печать дробной части давления в диапазоне от 0 до 99 (когда два знака в числе)
     if(press_int <= 99) {
         uint8_t int_len = canvas_string_width(canvas, app->buff);
@@ -184,13 +177,13 @@ static void _draw_pressure(Canvas* canvas, Sensor* sensor) {
     //Единица измерения
 
     if(app->settings.pressure_unit == UT_PRESSURE_MM_HG) {
-        canvas_draw_icon(canvas, x + 56, y + 3, &I_mm_hg_15x15);
+        canvas_draw_icon(canvas, x + 50, y + 2, &I_mm_hg_15x15);
     } else if(app->settings.pressure_unit == UT_PRESSURE_IN_HG) {
-        canvas_draw_icon(canvas, x + 56, y + 3, &I_in_hg_15x15);
+        canvas_draw_icon(canvas, x + 50, y + 2, &I_in_hg_15x15);
     } else if(app->settings.pressure_unit == UT_PRESSURE_KPA) {
-        canvas_draw_str(canvas, x + 57, y + 13, "kPa");
+        canvas_draw_str(canvas, x + 52, y + 13, "kPa");
     } else if(app->settings.pressure_unit == UT_PRESSURE_HPA) {
-        canvas_draw_str(canvas, x + 58, y + 13, "hPa");
+        canvas_draw_str(canvas, x + 67, y + 13, "hPa");
     }
 }
 

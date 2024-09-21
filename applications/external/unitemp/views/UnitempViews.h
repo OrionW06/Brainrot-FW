@@ -1,4 +1,3 @@
-#pragma once
 /*
     Unitemp - Universal temperature reader
     Copyright (C) 2022-2023  Victor Nikitchuk (https://github.com/quen0n)
@@ -20,7 +19,6 @@
 #define UNITEMP_SCENES
 
 #include "../unitemp.h"
-#include <unitemp_icons.h>
 
 //Виды менюшек
 typedef enum UnitempViews {
