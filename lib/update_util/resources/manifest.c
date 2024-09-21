@@ -4,12 +4,7 @@
 #include <toolbox/strint.h>
 #include <toolbox/hex.h>
 
-struct ResourceManifestReader {
-    Storage* storage;
-    Stream* stream;
-    FuriString* linebuf;
-    ResourceManifestEntry entry;
-};
+#include "manifest_i.h"
 
 ResourceManifestReader* resource_manifest_reader_alloc(Storage* storage) {
     ResourceManifestReader* resource_manifest =
@@ -166,10 +161,4 @@ ResourceManifestEntry*
         stream_seek(resource_manifest->stream, previous_position, StreamOffsetFromStart);
         return NULL;
     }
-}
-
-bool resource_manifest_rewind(ResourceManifestReader* resource_manifest) {
-    furi_assert(resource_manifest);
-
-    return stream_seek(resource_manifest->stream, 0, StreamOffsetFromStart);
 }

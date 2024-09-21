@@ -1,5 +1,4 @@
 #include <gui/scene_manager.h>
-#include <applications.h>
 
 #include "../desktop_settings_app.h"
 #include "desktop_settings_scene.h"
@@ -40,8 +39,8 @@ void desktop_settings_scene_pin_menu_on_enter(void* context) {
             app);
     }
 
-    submenu_set_header(app->submenu, "PIN Code Settings");
-    submenu_set_selected_item(app->submenu, app->pin_menu_idx);
+    submenu_set_header(app->submenu, "PIN Code Settings:");
+    submenu_set_selected_item(app->submenu, app->menu_idx);
     view_dispatcher_switch_to_view(app->view_dispatcher, DesktopSettingsAppViewMenu);
 }
 
@@ -73,16 +72,11 @@ bool desktop_settings_scene_pin_menu_on_event(void* context, SceneManagerEvent e
             consumed = true;
             break;
         }
-    } else if(event.type == SceneManagerEventTypeBack) {
-        submenu_set_selected_item(app->submenu, 0);
     }
-
     return consumed;
 }
 
 void desktop_settings_scene_pin_menu_on_exit(void* context) {
     DesktopSettingsApp* app = context;
-
-    app->pin_menu_idx = submenu_get_selected_item(app->submenu);
     submenu_reset(app->submenu);
 }

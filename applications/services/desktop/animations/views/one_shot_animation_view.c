@@ -1,4 +1,3 @@
-
 #include "one_shot_animation_view.h"
 #include <furi.h>
 #include <gui/canvas.h>

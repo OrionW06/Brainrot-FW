@@ -1,4 +1,5 @@
 #include "../nfc_app_i.h"
+#include <nfc_icons.h>
 
 void nfc_scene_mf_classic_mfkey_complete_callback(
     GuiButtonType result,

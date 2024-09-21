@@ -1,4 +1,5 @@
 #include "../nfc_app_i.h"
+#include <nfc_icons.h>
 
 void nfc_scene_mf_ultralight_write_fail_widget_callback(
     GuiButtonType result,
@@ -26,7 +27,7 @@ void nfc_scene_mf_ultralight_write_fail_on_enter(void* context) {
         AlignLeft,
         AlignTop,
         FontSecondary,
-        "Card protected by\npassword, AUTH0\nor lock bits");
+        "Wrong password or\ncard protected by\nlock bits");
 
     widget_add_button_element(
         widget,

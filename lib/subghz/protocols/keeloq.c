@@ -379,7 +379,6 @@ bool subghz_protocol_keeloq_bft_create_data(
     instance->generic.seed = seed;
     instance->manufacture_name = manufacture_name;
     instance->generic.data_count_bit = 64;
-    // roguuemaster don't steal.!!!!
     bool res = subghz_protocol_keeloq_gen_data(instance, btn, false);
     if(res) {
         return SubGhzProtocolStatusOk ==
@@ -760,7 +759,7 @@ static inline bool subghz_protocol_keeloq_check_decrypt_centurion(
     uint8_t btn) {
     furi_assert(instance);
 
-    if((decrypt >> 28 == btn) && ((((uint16_t)(decrypt >> 16)) & 0x3FF) == 0x1CE)) {
+    if((decrypt >> 28 == btn) && (((((uint16_t)(decrypt >> 16)) & 0x3FF) == 0x1CE))) {
         instance->cnt = decrypt & 0x0000FFFF;
         /*FURI_LOG_I(
             "KL",
